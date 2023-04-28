@@ -51,7 +51,7 @@ ggsave(file.path(dir, "WT_boxplot_full.png"), fig0, width = 18, height = 8)
 WT_pval = auc_long %>%
   filter(Method %in% c("CNN", "XGBoost", "CNN_no_filter57", "CNN_no_filter357")) %>%
   t_test(`Spearman Correlation` ~ Method, paired = TRUE,
-         ref.group = "CNN") %>%
+         ref.group = "CNN", p.adjust.method = "BH") %>%
   mutate(p.adj.combined = ifelse(p.adj.signif == "ns", "n.s.",
                                  paste0(format(p.adj, digits = 2), p.adj.signif)))
 
