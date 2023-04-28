@@ -12,10 +12,12 @@ auc_long = auc %>%
 
 auc_pval = auc_long %>%
   group_by(method) %>%
-  t_test(AUC ~ Input, paired = TRUE,
-         ref.group = "Sequence+annotation")
+  t_test(AUC ~ Input, paired = TRUE, p.adjust.method = "BH",
+         ref.group = "Sequence+annotation") %>%
+  mutate(p.adj.combined = ifelse(p.adj.signif == "ns", "n.s.",
+                                 paste0(format(p.adj, digits = 2), p.adj.signif)))
 
-## figure without seq+top annotation
+## Boxplot for three types of inputs
 fig0 = auc_long %>%
   group_by(method) %>%
   ggplot(aes(x = method, y = AUC)) +
@@ -26,7 +28,7 @@ fig0 = auc_long %>%
   #coord_cartesian(ylim = c(0.5, 0.75)) +
   labs(fill = "Input") +
   stat_pvalue_manual(auc_pval %>% add_xy_position(x="method",dodge=0.75), 
-                     label = "p.adj.signif", tip.length = 0.05, size = 8,
+                     label = "p.adj.combined", tip.length = 0.05, size = 8,
                      step.increase = 0.05) +
   theme(panel.background = element_rect(color=NA, fill = "white"),
         panel.border = element_blank(),
