@@ -36,4 +36,8 @@ write_csv(XGB_result_mat, file.path(savedir, "sc_auc_xgboost_summary.csv"))
 combined = bind_rows(list(CNN=CNN_result_mat, XGBoost = XGB_result_mat), .id="method")
 write_csv(combined, file.path(savedir, "sc_auc_combined_summary.csv"))
 
+combined %>%
+  pivot_longer(seq:seqannot, names_to = "input", values_to = "AUC") %>%
+  group_by(method, input) %>%
+  summarise(meanAUC = mean(AUC))
 
