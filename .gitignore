@@ -39,4 +39,7 @@ vignettes/*.pdf
 .Renviron
 
 # Output figures
-# *.png
+*.png
+
+# ppt files
+*.pptx
