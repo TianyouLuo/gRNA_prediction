@@ -375,12 +375,25 @@ names(data2)[names(data2) == 'strand.y'] <- "strand"
 write_csv(data2, "./data/dat_discovery/wgCERES-gRNAs-k562-discovery-screen-full-add-converse.csv")
 data2 <- read_csv("./data/dat_discovery/wgCERES-gRNAs-k562-discovery-screen-full-add-converse.csv")
 
+# Draw the preprocessing plot based on baseMean
+p2 <- ggplot(data2 %>% filter(baseMean<1000),aes(x= baseMean, y=-log10(padj)))+
+  geom_point(size = 3)+
+  geom_hline(yintercept=-log10(0.05), linetype="dashed", color = "red", linewidth = 3)+
+  geom_vline(xintercept=125, linetype="dashed", color = "blue", linewidth = 3)+
+  theme_minimal()+
+      theme(panel.background = element_rect(fill = "white", colour = "grey50"),
+            legend.position = c(.05, .99),
+            text = element_text(size = 25),
+            legend.text = element_text(size = 24),
+            legend.justification = c("left", "top"),
+            legend.box.just = "right",
+            legend.margin = margin(6, 6, 6, 6))
+
+jpeg(file="/proj/milovelab/mu/dukeproj/data/dat_discovery/result/plots/totalcount2.jpg",width = 10, height = 10,units = "in",res=450)
+p2 
+dev.off()
 ## select promoter
 dat_pro = data2 %>% filter(annotation_wg=="Promoter")
-
-ggplot(dat_pro %>% filter(baseMean<1000),aes(x= baseMean, y=log10(pvalue)))+
-  geom_point()+
-  geom_hline(yintercept=log10(0.05), linetype="dashed", color = "red")
 
 ## logFC prediction
 # library(caret)
